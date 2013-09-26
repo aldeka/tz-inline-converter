@@ -9,19 +9,19 @@
         $(document).ready(function(){
 
             var generateTZDropdown = function() {
-                var timezoneData = moment.timezoneData.zones;
-                var dropdownString = '<option value="" default>-- Convert timezone --</option>'
+                var timezoneData = moment.timezoneData.zones, $dropdown = $('<select>');
+                $dropdown.append('<option value="" default>-- Convert timezone --</option>');
                 for(var k in timezoneData) {
-                    dropdownString += '<option value="' + k + '">' + k + '</option>';
+                    $dropdown.append($('<option>').attr('value', k).text(k));
                 }
-                return dropdownString;
+                return $dropdown;
             };
 
             $('time').each(function(i) {
-                var item = $($('time')[i]);
-                var the_time = item.attr('datetime');
+                var $item = $(this);
+                var the_time = $item.attr('datetime');
                 if (the_time && moment(the_time).isValid()) {
-                    item.append(' <select class="timezone-converter" datetime="' + the_time + '">' + generateTZDropdown() + '</select>');
+                    $item.append(generateTZDropdown().attr({'class': 'timezone-converter', 'datetime': the_time }));
                 }
             });
 
