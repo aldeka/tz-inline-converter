@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script src="vendor/jquery-1.10.2.min.js"></script>
+        <script src="vendor/moment.min.js"></script>
+        <script src="vendor/moment-timezone.min.js"></script>
+        <script src="moment-timezone-data.js"></script>
+
+        <script type="text/javascript">
+        $(document).ready(function(){
+
+            var generateTZDropdown = function() {
+                var timezoneData = moment.timezoneData.zones;
+                var dropdownString = '<option value="" default>-- Convert timezone --</option>'
+                for(var k in timezoneData) {
+                    dropdownString += '<option value="' + k + '">' + k + '</option>';
+                }
+                return dropdownString;
+            };
+
+            $('time').each(function(i) {
+                var item = $($('time')[i]);
+                var the_time = item.attr('datetime');
+                if (the_time && moment(the_time).isValid()) {
+                    item.append(' <select class="timezone-converter" datetime="' + the_time + '">' + generateTZDropdown() + '</select>');
+                }
+            });
+
+            $('.timezone-converter').on('change', function(){
+                $('.translated-time').remove();
+                var originalTime = $(this).attr('datetime');
+                var tz = $(this).val();
+                if (moment(originalTime).isValid() && Boolean(tz)) {
+                    var newText = '<span class="translated-time">' + moment(originalTime).tz(tz).format('MMMM Do YYYY, h:mm a') + '</span>';
+                    $(this).parent().append(' ' + newText);
+                }
+            });
+        });
+        </script>
+    </head>
+
+    <body>
+        <time datetime="2013-09-27 20:00">September 27, 8:00 PM</time>
+    </body>
+</html>
